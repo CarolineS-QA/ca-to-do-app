@@ -29,13 +29,29 @@
   </body>
 
   <script>
-    var json_data = [];
+
+    // var json_data = [
+    //  {
+    //     "userId": 1, //only if multiple users
+    //     "id": 5, //needed for deletion
+    //     "title": "laboriosam mollitia et enim quasi adipisci quia provident illum",
+    //     "completed": false //useful as a feature
+    //   }
+    // ];
+
+    //local storage stores a string
+    var json_data = JSON.parse( localStorage.getItem('json_data') );
 
     var myList = document.getElementById("todo-list");
 
-json_data.forEach(element => {
-  newTodo(element.title);
-});
+// checks if empty
+    if (json_data) {
+      json_data.forEach(element => {
+        if (element) {
+          newTodo(element.title, element.id);
+        }
+      });
+    }
 
 registerEventListeners();
 
@@ -51,14 +67,20 @@ function registerEventListeners() {
     function deleteTodo() {
       var li = this.parentElement;
       myList.removeChild(li);
+      var json_temp = JSON.parse( localStorage.getItem('json_data') );
+      delete json_temp[li.dataset.id];
+      localStorage.setItem('json_data', JSON.stringify(json_temp) );
     }
 
 // for new todo form
-function newTodo(todoTitle) {
-      if (!todoTitle) {
+function newTodo(todoTitle, todoId) {
+      if (!todoTitle && !todoId) {
         todoTitle = document.getElementById("todoTitle").value;
+        var todoId = storeTodoLocal(todoTitle);
       }
       var listItem = document.createElement("li");
+      // dataset.attribute allows addings of attiributes
+      listItem.dataset.id = todoId;
       listItem.appendChild(
         document.createTextNode(todoTitle) 
       );
@@ -72,6 +94,37 @@ function newTodo(todoTitle) {
       myList.appendChild(listItem);
       registerEventListeners();
     }
+
+//to store todos
+  function storeTodoLocal(todoTitle) {
+
+    // retrieve and parse existing JSON from localstorage
+    var json_temp = JSON.parse( localStorage.getItem('json_data') );
+
+    if (!json_temp) {
+      json_temp = [];
+    }
+
+    // creating a new todo ID based on length of existing localstorage array
+    var todoId = json_temp.length;
+
+    // add new todo object to JSON
+    json_temp.push({
+      "id": todoId,
+      "title": todoTitle,
+      "completed": false
+    });
+
+    // log updated JSON to console
+    console.log(json_temp);
+
+    // stringify updated JSON and store back in localStorage
+    localStorage.setItem('json_data', JSON.stringify(json_temp));
+
+      // return ID of new todo
+      return todoId;
+
+  }
 
 
   </script>
