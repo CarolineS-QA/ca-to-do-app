@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>JavaScript Tutorial - Working with JSON</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
 
   <body>
@@ -12,15 +13,16 @@
       <h1>Javascript Todo App</h1>
 
       <div class="row mt-4">
-        <div class="col-8">
+        <div class="col-md-8">
           <ul id="todo-list">
           </ul>
         </div>
-        <div class="col-4">
+        <div class="col-md-4">
           <form>
             <input type="text" class="form-control" id="todoTitle" placeholder="Todo title...">
             <button onclick="newTodo()" class="addBtn btn btn-sm btn-primary form-control mt-3">Add</span>
           </form>
+          <button onclick="deleteAllTodos()" class="addBtn btn btn-sm btn-danger form-control mt-5">Delete All</span>
         </div>
       </div>
 
@@ -125,6 +127,13 @@ function newTodo(todoTitle, todoId) {
       return todoId;
 
   }
+
+  function deleteAllTodos() {
+    if (confirm("Are you sure you want to delete all of your Todos?")) {
+        localStorage.removeItem('json_data');
+        myList.innerHTML = '';
+      }
+    }
 
 
   </script>
